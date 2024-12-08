@@ -1,1 +1,7 @@
 Manifest.toml
+*.exo
+*.inp
+*.json
+*.spn
+*.stl
+
