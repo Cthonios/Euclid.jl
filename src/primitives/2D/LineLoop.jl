@@ -1,5 +1,5 @@
-struct LineLoop{T, NL} <: AbstractGeometricPrimitive{T, 2}
-  lines::NTuple{NL, Line{T}}
+struct LineLoop{T, A <: NTuple} <: AbstractGeometricPrimitive{T, 2}
+  lines::A
   # function LineLoop(lines::NTuple{NL, Line{T}}) where {NL, T}
   #   @assert length(unique(lines)) == NL "Lines not unique"
   #   checks = map(x -> cross(first(lines).b - first(lines.a), x.b - x.a), Base.tail(lines)...)

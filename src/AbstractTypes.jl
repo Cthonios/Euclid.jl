@@ -7,15 +7,17 @@ function boundingbox(::AbstractPrimitive)
 end
 
 abstract type AbstractGeometricPrimitive{T, N} <: AbstractPrimitive{T, N} end
+AbstractTrees.children(::AbstractGeometricPrimitive) = ()
 abstract type AbstractAffinePrimitive{
   T, N,
   M, MInv,
   P <: AbstractPrimitive{T, N}
 } <: AbstractPrimitive{T, N} end
+AbstractTrees.children(g::AbstractAffinePrimitive) = (g.primitive,)
 abstract type AbstractBooleanPrimitive{T, N, A, B} <: AbstractPrimitive{T, N} end
 left(g::AbstractBooleanPrimitive) = g.left
 right(g::AbstractBooleanPrimitive) = g.right
-children(g::AbstractBooleanPrimitive) = (g.left, g.right)
+AbstractTrees.children(g::AbstractBooleanPrimitive) = (g.left, g.right)
 abstract type AbstractStaticBooleanPrimitive{
   T, N, 
   A <: AbstractPrimitive{T, N}, 

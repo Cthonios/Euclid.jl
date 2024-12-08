@@ -3,6 +3,7 @@ module Euclid
 # mainly for the STL mesh type
 import GeometryBasics
 
+using AbstractTrees
 using LinearAlgebra
 using MeshIO
 using Serde
