@@ -11,7 +11,6 @@ function boundingbox(g::Torus)
   a, c = g.a, g.c
   return BoundingBox(
     Point(-c - a, -c - a, -a),
-    # Widths(2 * (c + a), 2 * (c + a), 2 * a)
     Point(c + a, c + a, a)
   )
 end

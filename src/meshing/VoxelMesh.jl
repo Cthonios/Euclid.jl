@@ -5,7 +5,7 @@ function voxel_mesh(file_name::String, g::AbstractPrimitive, n_samples = 64)
   xs = LinRange(bb.min[1], bb.max[1], n_samples)
   ys = LinRange(bb.min[2], bb.max[2], n_samples)
   zs = LinRange(bb.min[3], bb.max[3], n_samples)
-  for i in 1:n_samples
+  Threads.@threads for i in 1:n_samples
     for j in 1:n_samples
       for k in 1:n_samples
         v = Point(xs[i], ys[j], zs[k])

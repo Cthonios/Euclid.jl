@@ -19,7 +19,7 @@ function updatesdf!(mesh::Mesh, g::AbstractPrimitive)
   xp = LinRange(first(ranges[1]), last(ranges[1]), samples[1])
   yp = LinRange(first(ranges[2]), last(ranges[2]), samples[2])
   zp = LinRange(first(ranges[3]), last(ranges[3]), samples[3])
-  for x in eachindex(xp)
+  Threads.@threads for x in eachindex(xp)
     # @info "$x / $(length(xp))"
     for y in eachindex(yp)
       for z in eachindex(zp)

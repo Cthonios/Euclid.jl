@@ -1,18 +1,29 @@
 name = "Euclid"
 uuid = "dad380ae-770c-4f78-bf4f-27055e0f4f18"
-authors = ["Craig M. Hamel <cmhamel32@gmail.com>"]
 version = "0.1.0"
+authors = ["Craig M. Hamel <cmhamel32@gmail.com>"]
 
 [deps]
-CoordinateTransformations = "150eb455-5306-5404-9cee-2592286d6298"
-Descartes = "ea4ead7c-22ac-5e77-afc5-cd927cdc0b20"
+AbstractTrees = "1520ce14-60c1-5f80-bbc7-55ef81b5835c"
 FileIO = "5789e2e9-d7fb-5bc7-8068-2c6fae9b9549"
-FiniteDifferences = "26cc04aa-876d-5657-8c51-4c34ba976000"
-ForwardDiff = "f6369f11-7733-5829-9624-2563aa707210"
 GeometryBasics = "5c1252a2-5f33-56bf-86c9-59e7332b4326"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 MeshIO = "7269a6da-0436-5bbc-96c2-40638cbb6118"
-Meshing = "e6723b4c-ebff-59f1-b4b7-d97aa5274f73"
-ReverseDiff = "37e2e3b7-166d-5795-8a7a-e32c996b4267"
-Rotations = "6038ab10-8711-5258-84ad-4b1120ba62dc"
+Serde = "db9b398d-9517-45f8-9a95-92af99003e0e"
 StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
+
+[compat]
+AbstractTrees = "0.4.5"
+FileIO = "1"
+GeometryBasics = "0.4"
+LinearAlgebra = "1"
+MeshIO = "0.4"
+Serde = "3"
+StaticArrays = "1"
+
+[extras]
+Aqua = "4c88cf16-eb10-579e-8560-4a9242c79595"
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Aqua", "Test"]

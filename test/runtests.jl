@@ -1,3 +1,4 @@
+using Aqua
 using Euclid
 using StaticArrays
 using Test
@@ -127,3 +128,9 @@ end
 
 test_rotation()
 test_translation()
+
+function test_aqua()
+  Aqua.test_all(Euclid)
+end
+
+test_aqua()

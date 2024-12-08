@@ -1,40 +1,57 @@
-struct UnionOperation{
+struct StaticUnion{
   T, N, 
   A <: AbstractPrimitive{T, N}, 
   B <: AbstractPrimitive{T, N}
-} <: AbstractBooleanPrimitive{T, N, A, B}
+} <: AbstractStaticBooleanPrimitive{T, N, A, B}
   left::A
   right::B
 end
 
-function boundingbox(g::UnionOperation)
+function boundingbox(g::StaticUnion)
   return union(boundingbox(left(g)), boundingbox(right(g)))
 end
 
-function sdf(g::UnionOperation, v)
+function sdf(g::StaticUnion, v)
   return min(sdf(left(g), v), sdf(right(g), v))
 end
 
-# function Base.union(g1::AbstractPrimitive, g2::AbstractPrimitive)
-#   return UnionOperation(g1, g2)
-# end
+struct DynamicUnion{
+  T, N, 
+  A <: AbstractPrimitive{T, N}, 
+  B <: AbstractArray{<:AbstractPrimitive{T, N}, 1}
+} <: AbstractDynamicBooleanPrimitive{T, N, A, B}
+  left::A
+  right::B
+end
 
-# function Base.union(g1::AbstractPrimitive{T, N}, g2::AbstractPrimitive{T, N})::UnionOperation{T, N, <:AbstractPrimitive, <:AbstractPrimitive} where {T, N}
-#   return UnionOperation(g1, g2)
-# end
+function boundingbox(g::DynamicUnion)
+  bb_left = boundingbox(left(g))
+  bb_min, bb_max = bb_left.min, bb_left.max
+  for other in right(g)
+    bb_min = min(bb_min, min(boundingbox(other)))
+    bb_max = max(bb_max, max(boundingbox(other)))
+  end
+  return BoundingBox(bb_min, bb_max)
+end
 
-Base.union(::Nothing, g::AbstractPattern) = g
+function sdf(g::DynamicUnion, v)
+  d = sdf(left(g), v)
+  for other in right(g)
+    d = min(d, sdf(other, v))
+  end
+  return d
+end
+
+# front end methods
+Base.union(::Nothing, g::AbstractPrimitive) = g
 Base.union(g::AbstractPrimitive, ::Nothing) = g
 
 function Base.union(g1::AbstractPrimitive, g2::AbstractPrimitive)
-  g = UnionOperation(g1, g2)
+  g = StaticUnion(g1, g2)
   return g
 end
 
-# type instability below so try and use the annoying two input one above
-function Base.union(g::AbstractPrimitive, others...)
-  for other in others
-    g = union(g, other)
-  end
+function Base.union(g1::AbstractPrimitive, g2::AbstractArray{<:AbstractPrimitive, 1})
+  g = DynamicUnion{eltype(g1), ndims(g1), typeof(g1), typeof(g2)}(g1, g2)
   return g
 end

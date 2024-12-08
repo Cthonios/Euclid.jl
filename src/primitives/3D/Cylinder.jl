@@ -8,6 +8,14 @@ struct Cylinder{T} <: AbstractGeometricPrimitive{T, 3}
             height > zero(T)
     new{T}(bottom, radius, height)
   end
+
+  # need this method for IO, but also useful to define
+  # positioing apriori
+  function Cylinder(bottom::T, radius::T, height::T) where T
+    @assert radius > zero(T) &&
+            height > zero(T)
+    new{T}(bottom, radius, height)
+  end
 end
 
 function boundingbox(g::Cylinder)

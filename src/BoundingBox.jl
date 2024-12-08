@@ -31,6 +31,9 @@ function Base.intersect(bb1::BoundingBox, bb2::BoundingBox)
   )
 end
 
+Base.max(bb::BoundingBox) = bb.max
+Base.min(bb::BoundingBox) = bb.min
+
 function Base.union(bb1::BoundingBox, bb2::BoundingBox)
   # return BoundingBox(min(bb1.min, bb2.min), max(bb1.max, bb2.max))
   return BoundingBox(

@@ -1,21 +1,3 @@
-struct AffineTransformation{T}
-  A::SMatrix{3, 3, T, 9}
-  c::SVector{3, T}
-end
-
-function (transform::AffineTransformation)(x::Point)
-  return transform.A * x + transform.c
-end
-
-function invert(transform::AffineTransformation)
-  # correct just trying other things
-  # return inv(transform.A) * (x - transform.c)
-  inv_A = inv(transform.A)
-  inv_c = -inv_A * transform.c
-  return AffineTransformation(inv_A, inv_c)
-end
-
-# container
 struct AffineMapContainer{
   T, N, 
   M, MInv, 
@@ -27,20 +9,12 @@ struct AffineMapContainer{
 end
 
 function AffineMapContainer(transform, primitive::T) where T <: AbstractPrimitive
-  # return AffineMapContainer(transform, inv(transform), primitive)
   return AffineMapContainer(transform, invert(transform), primitive)
 end
-
-# function AffineMapContainer(transform, primitive::T) where T <: AbstractAffinePrimitive
-#   # transform = CoordinateTransformations.compose(primitive.transform, transform)
-#   transform = CoordinateTransformations.compose(transform, primitive.transform)
-#   return AffineMapContainer(transform, inv(transform), primitive.primitive)
-# end
 
 function boundingbox(g::AffineMapContainer)
   cs = corners(boundingbox(g.primitive))
   cs = map(x -> g.transform(x), cs)
-  # @show cs
   xs = map(x -> x[1], cs)
   ys = map(x -> x[2], cs)
   zs = map(x -> x[3], cs)
@@ -54,7 +28,7 @@ function sdf(g::AffineMapContainer, v)
   return sdf(g.primitive, g.transform_inv(v))
 end
 
-# rotation
+# front end method
 function rotate(g, axis, angle)
   if axis == :x
     A = SMatrix{3, 3, eltype(g), 9}(
@@ -64,7 +38,7 @@ function rotate(g, axis, angle)
     )
   elseif axis == :y
     A = SMatrix{3, 3, eltype(g), 9}(
-      cos(angle), 0., sin(angle),
+      cos(angle), 0., -sin(angle),
       0., 1., 0.,
       sin(angle), 0., cos(angle)
     )
@@ -78,6 +52,28 @@ function rotate(g, axis, angle)
     @assert false
   end
   transform = AffineTransformation(A, zeros(SVector{3, eltype(g)}))
+  return AffineMapContainer(transform, invert(transform), g)
+end
+
+function scale(g, x, y, z)
+  A = SMatrix{3, 3, eltype(g), 9}(
+    x, 0., 0.,
+    0., y, 0.,
+    0., 0., z
+  )
+  c = zero(SVector{3, eltype(g)})
+  transform = AffineTransformation(A, c)
+  return AffineMapContainer(transform, invert(transform), g)
+end
+
+function shear(g, gamma)
+  A = SMatrix{3, 3, eltype(g), 9}(
+    1., 0., 0.,
+    gamma, 1., 0.,
+    0., 0., 1.
+  )
+  c = zero(SVector{3, eltype(g)})
+  transform = AffineTransformation(A, c)
   return AffineMapContainer(transform, invert(transform), g)
 end
 

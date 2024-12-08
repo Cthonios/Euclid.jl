@@ -1,16 +1,10 @@
 module Euclid
 
-# import CoordinateTransformations
+# mainly for the STL mesh type
 import GeometryBasics
 
-# using CoordinateTransformations
-# using Enzyme
-# using ForwardDiff
-# using Gtk4
-# using Gtk4Makie
 using LinearAlgebra
 using MeshIO
-# using Rotations
 using Serde
 using StaticArrays
 
@@ -19,16 +13,15 @@ include("BoundingBox.jl")
 
 # affine
 include("affine/Affine.jl")
-# include("affine/Rotation.jl")
-# include("affine/Translation.jl")
 
 # booleans
 include("booleans/Difference.jl")
 include("booleans/Intersection.jl")
 include("booleans/Union.jl")
 
-# # primitives
-# include("primitives/0D/Vertex.jl")
+# primitives
+# 0D
+include("primitives/0D/Vertex.jl")
 
 # 1D
 include("primitives/1D/Arc.jl")
@@ -47,11 +40,14 @@ include("primitives/3D/Cube.jl")
 include("primitives/3D/Cylinder.jl")
 include("primitives/3D/Ellipsoid.jl")
 # include("primitives/3D/Gyroid.jl")
+include("primitives/3D/Helix.jl")
 include("primitives/3D/Sphere.jl")
 include("primitives/3D/Torus.jl")
 
-# # others
-# include("Warps.jl")
+# TODO
+# brep stuff that needs to be worked out better
+include("primitives/1D/Brep.jl")
+include("primitives/2D/Brep.jl")
 
 # complex operations
 include("LinearExtrude.jl")
@@ -63,8 +59,10 @@ include("meshing/VoxelMesh.jl")
 # io stuff
 include("io/Step.jl")
 
-# primitive exports
+# geometries
 export Point
+# topologies
+export Vertex
 export Line
 export Circle,
        Ellipse,

@@ -12,15 +12,51 @@ abstract type AbstractAffinePrimitive{
   M, MInv,
   P <: AbstractPrimitive{T, N}
 } <: AbstractPrimitive{T, N} end
-abstract type AbstractBooleanPrimitive{
+abstract type AbstractBooleanPrimitive{T, N, A, B} <: AbstractPrimitive{T, N} end
+left(g::AbstractBooleanPrimitive) = g.left
+right(g::AbstractBooleanPrimitive) = g.right
+children(g::AbstractBooleanPrimitive) = (g.left, g.right)
+abstract type AbstractStaticBooleanPrimitive{
   T, N, 
   A <: AbstractPrimitive{T, N}, 
   B <: AbstractPrimitive{T, N}
-} <: AbstractPrimitive{T, N} end
-left(g::AbstractBooleanPrimitive) = g.left
-right(g::AbstractBooleanPrimitive) = g.right
+} <: AbstractBooleanPrimitive{T, N, A, B} end
+abstract type AbstractDynamicBooleanPrimitive{
+  T, N, 
+  A <: AbstractPrimitive{T, N}, 
+  B <: AbstractArray{<:AbstractPrimitive{T, N}, 1}
+} <: AbstractBooleanPrimitive{T, N, A, B} end
 
+
+const Direction{T} = SVector{3, T} where T
 const Point{T} = SVector{3, T} where T
+
+struct AffineTransformation{T}
+  A::SMatrix{3, 3, T, 9}
+  c::SVector{3, T}
+end
+
+function (transform::AffineTransformation)(x::Point)
+  return transform.A * x + transform.c
+end
+
+function invert(transform::AffineTransformation)
+  # correct just trying other things
+  # return inv(transform.A) * (x - transform.c)
+  inv_A = inv(transform.A)
+  inv_c = -inv_A * transform.c
+  return AffineTransformation(inv_A, inv_c)
+end
+
+struct Axis{T}
+  location::Point{T}
+  axis::SVector{3, T}
+  ref_direction::Direction{T}
+end
+
+struct Plane{T}
+  axis::Axis{T}
+end
 
 # Serde stuff
 function struct_to_dict(g::AbstractPrimitive)
@@ -38,7 +74,11 @@ function struct_to_dict(g::AbstractAffinePrimitive)
     "type" => String(typeof(g).name.name),
     "parameters" => Dict{String, Any}(
       "primitive" => struct_to_dict(g.primitive),
-      "transform" => Serde.parse_json(Serde.to_json(g.transform))
+      # "transform" => Serde.parse_json(Serde.to_json(g.transform))
+      "transform" => Dict{String, Any}(
+        "A" => vec(g.transform.A),
+        "c" => vec(g.transform.c)
+      )
     )
   )
   return d_ret
@@ -72,11 +112,10 @@ function dict_to_struct(dict)
 
   if type <: AbstractAffinePrimitive
     primitive = dict_to_struct(dict["parameters"]["primitive"])
-    @show primitive
-    @show type
-    transform = Serde.deser(CoordinateTransformations.LinearMap, dict["parameters"]["transform"])
-    @show transform
-    return type(transform, inv(transform), primitive)
+    A = SMatrix{3, 3, Float64, 9}(dict["parameters"]["transform"]["A"])
+    c = SVector{3, Float64}(dict["parameters"]["transform"]["c"])
+    transform = AffineTransformation(A, c)
+    return type(transform, invert(transform), primitive)
   elseif type <: AbstractBooleanPrimitive
     l = dict_to_struct(dict["parameters"]["left"])
     r = dict_to_struct(dict["parameters"]["right"])
