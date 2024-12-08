@@ -1,3 +1,7 @@
+"""
+$(TYPEDEF)
+$(TYPEDFIELDS)
+"""
 struct Circle{T} <: AbstractGeometricPrimitive{T, 2}
   radius::T
   function Circle(radius::T) where T

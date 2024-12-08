@@ -1,3 +1,7 @@
+"""
+$(TYPEDEF)
+$(TYPEDFIELDS)
+"""
 struct StaticIntersection{
   T, N,
   A <: AbstractPrimitive{T, N},
@@ -15,10 +19,17 @@ function sdf(g::StaticIntersection, v)
   return max(sdf(left(g), v), sdf(right(g), v))
 end
 
+"""
+$(TYPEDSIGNATURES)
+"""
 function Base.intersect(g1::AbstractPrimitive, g2::AbstractPrimitive)
   return StaticIntersection(g1, g2)
 end
 
+"""
+$(TYPEDEF)
+$(TYPEDFIELDS)
+"""
 struct DynamicIntersection{
   T, N,
   A <: AbstractPrimitive{T, N},
@@ -46,6 +57,9 @@ function sdf(g::DynamicIntersection, v)
   return d
 end
 
+"""
+$(TYPEDSIGNATURES)
+"""
 function Base.intersect(g1::AbstractPrimitive, g2::AbstractArray{<:AbstractPrimitive, 1})
   return DynamicIntersection(g1, g2)
 end

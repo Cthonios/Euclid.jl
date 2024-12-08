@@ -1,3 +1,7 @@
+"""
+$(TYPEDEF)
+$(TYPEDFIELDS)
+"""
 struct Line{T} <: AbstractGeometricPrimitive{T, 1}
   a::Point{T}
   b::Point{T}

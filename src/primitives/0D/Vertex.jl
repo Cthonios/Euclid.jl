@@ -1,3 +1,7 @@
+"""
+$(TYPEDEF)
+$(TYPEDFIELDS)
+"""
 struct Vertex{T} <: AbstractGeometricPrimitive{T, 0}
   p::Point{T}
 end

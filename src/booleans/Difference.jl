@@ -1,3 +1,7 @@
+"""
+$(TYPEDEF)
+$(TYPEDFIELDS)
+"""
 struct StaticDifference{
   T, N,
   A <: AbstractPrimitive{T, N},
@@ -15,6 +19,10 @@ function sdf(g::StaticDifference, v)
   return max(sdf(left(g), v), -sdf(right(g), v))
 end
 
+"""
+$(TYPEDEF)
+$(TYPEDFIELDS)
+"""
 struct DynamicDifference{
   T, N,
   A <: AbstractPrimitive{T, N},
@@ -44,10 +52,16 @@ function sdf(g::DynamicDifference, v)
 end
 
 # front end methods
+"""
+$(TYPEDSIGNATURES)
+"""
 function difference(g1::AbstractPrimitive, g2::AbstractPrimitive)
   return StaticDifference(g1, g2)
 end
 
+"""
+$(TYPEDSIGNATURES)
+"""
 function difference(g1::AbstractPrimitive, g2::AbstractArray{<:AbstractPrimitive, 1})
   return DynamicDifference(g1, g2)
 end

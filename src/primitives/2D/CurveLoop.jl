@@ -1,3 +1,7 @@
+"""
+$(TYPEDEF)
+$(TYPEDFIELDS)
+"""
 struct CurveLoop{
   T, 
   A <: AbstractArray{<:AbstractPrimitive{T, 1}, 1}

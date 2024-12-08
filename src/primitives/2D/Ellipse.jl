@@ -1,3 +1,7 @@
+"""
+$(TYPEDEF)
+$(TYPEDFIELDS)
+"""
 struct Ellipse{T} <: AbstractGeometricPrimitive{T, 2}
   a::T
   b::T

@@ -1,6 +1,9 @@
+"""
+$(TYPEDFIELDS)
+"""
 struct AffineMapContainer{
   T, N, 
-  M, MInv, 
+  M <: AffineTransformation{T}, MInv <: AffineTransformation{T}, 
   P <: AbstractPrimitive{T, N}
 } <: AbstractAffinePrimitive{T, N, M, MInv, P}
   transform::M
@@ -8,6 +11,9 @@ struct AffineMapContainer{
   primitive::P
 end
 
+"""
+$(TYPEDSIGNATURES)
+"""
 function AffineMapContainer(transform, primitive::T) where T <: AbstractPrimitive
   return AffineMapContainer(transform, invert(transform), primitive)
 end
@@ -29,7 +35,10 @@ function sdf(g::AffineMapContainer, v)
 end
 
 # front end method
-function rotate(g, axis, angle)
+"""
+$(TYPEDSIGNATURES)
+"""
+function rotate(g::AbstractPrimitive, axis, angle)
   if axis == :x
     A = SMatrix{3, 3, eltype(g), 9}(
       1., 0., 0., 0., 
@@ -55,7 +64,10 @@ function rotate(g, axis, angle)
   return AffineMapContainer(transform, invert(transform), g)
 end
 
-function scale(g, x, y, z)
+"""
+$(TYPEDSIGNATURES)
+"""
+function scale(g::AbstractPrimitive, x, y, z)
   A = SMatrix{3, 3, eltype(g), 9}(
     x, 0., 0.,
     0., y, 0.,
@@ -66,7 +78,10 @@ function scale(g, x, y, z)
   return AffineMapContainer(transform, invert(transform), g)
 end
 
-function shear(g, gamma)
+"""
+$(TYPEDSIGNATURES)
+"""
+function shear(g::AbstractPrimitive, gamma)
   A = SMatrix{3, 3, eltype(g), 9}(
     1., 0., 0.,
     gamma, 1., 0.,
@@ -77,7 +92,10 @@ function shear(g, gamma)
   return AffineMapContainer(transform, invert(transform), g)
 end
 
-function translate(g, x, y, z)
+"""
+$(TYPEDSIGNATURES)
+"""
+function translate(g::AbstractPrimitive, x, y, z)
   A = one(SMatrix{3, 3, eltype(g), 9})
   c = SVector{3, eltype(g)}(x, y, z)
   transform = AffineTransformation(A, c)

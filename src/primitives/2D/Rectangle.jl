@@ -1,3 +1,7 @@
+"""
+$(TYPEDEF)
+$(TYPEDFIELDS)
+"""
 struct Rectangle{T} <: AbstractGeometricPrimitive{T, 2}
   lower_corner::Point{T}
   width::T
