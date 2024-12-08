@@ -1,38 +1,82 @@
+"""
+$(TYPEDEF)
+$(TYPEDFIELDS)
+"""
 abstract type AbstractPrimitive{T, N} end
+"""
+"""
 Base.eltype(::AbstractPrimitive{T, N}) where {T, N} = T
+"""
+"""
 Base.ndims(::AbstractPrimitive{T, N}) where {T, N} = N
 
 function boundingbox(::AbstractPrimitive)
   throw(ErrorException("boundingbox must be implemented"))
 end
 
+"""
+$(TYPEDEF)
+$(TYPEDFIELDS)
+"""
 abstract type AbstractGeometricPrimitive{T, N} <: AbstractPrimitive{T, N} end
 AbstractTrees.children(::AbstractGeometricPrimitive) = ()
+
+"""
+$(TYPEDEF)
+$(TYPEDFIELDS)
+"""
 abstract type AbstractAffinePrimitive{
   T, N,
   M, MInv,
   P <: AbstractPrimitive{T, N}
 } <: AbstractPrimitive{T, N} end
 AbstractTrees.children(g::AbstractAffinePrimitive) = (g.primitive,)
+
+"""
+$(TYPEDEF)
+$(TYPEDFIELDS)
+"""
 abstract type AbstractBooleanPrimitive{T, N, A, B} <: AbstractPrimitive{T, N} end
 left(g::AbstractBooleanPrimitive) = g.left
 right(g::AbstractBooleanPrimitive) = g.right
 AbstractTrees.children(g::AbstractBooleanPrimitive) = (g.left, g.right)
+
+"""
+$(TYPEDEF)
+$(TYPEDFIELDS)
+"""
 abstract type AbstractStaticBooleanPrimitive{
   T, N, 
   A <: AbstractPrimitive{T, N}, 
   B <: AbstractPrimitive{T, N}
 } <: AbstractBooleanPrimitive{T, N, A, B} end
+
+"""
+$(TYPEDEF)
+$(TYPEDFIELDS)
+"""
 abstract type AbstractDynamicBooleanPrimitive{
   T, N, 
   A <: AbstractPrimitive{T, N}, 
   B <: AbstractArray{<:AbstractPrimitive{T, N}, 1}
 } <: AbstractBooleanPrimitive{T, N, A, B} end
 
-
+"""
+$(TYPEDEF)
+$(TYPEDFIELDS)
+"""
 const Direction{T} = SVector{3, T} where T
+
+"""
+$(TYPEDEF)
+$(TYPEDFIELDS)
+"""
 const Point{T} = SVector{3, T} where T
 
+"""
+$(TYPEDEF)
+$(TYPEDFIELDS)
+"""
 struct AffineTransformation{T}
   A::SMatrix{3, 3, T, 9}
   c::SVector{3, T}
@@ -50,12 +94,20 @@ function invert(transform::AffineTransformation)
   return AffineTransformation(inv_A, inv_c)
 end
 
+"""
+$(TYPEDEF)
+$(TYPEDFIELDS)
+"""
 struct Axis{T}
   location::Point{T}
   axis::SVector{3, T}
   ref_direction::Direction{T}
 end
 
+"""
+$(TYPEDEF)
+$(TYPEDFIELDS)
+"""
 struct Plane{T}
   axis::Axis{T}
 end

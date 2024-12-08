@@ -1,3 +1,7 @@
+"""
+$(TYPEDEF)
+$(TYPEDFIELDS)
+"""
 struct LineLoop{T, A <: NTuple} <: AbstractGeometricPrimitive{T, 2}
   lines::A
   # function LineLoop(lines::NTuple{NL, Line{T}}) where {NL, T}

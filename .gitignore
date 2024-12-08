@@ -1,8 +1,10 @@
 Manifest.toml
 *.exo
 *.inp
+*.log
 *.json
 *.spn
+*.step
 *.stl
 build/
 

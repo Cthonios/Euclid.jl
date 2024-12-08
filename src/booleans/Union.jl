@@ -1,3 +1,7 @@
+"""
+$(TYPEDEF)
+$(TYPEDFIELDS)
+"""
 struct StaticUnion{
   T, N, 
   A <: AbstractPrimitive{T, N}, 
@@ -15,6 +19,10 @@ function sdf(g::StaticUnion, v)
   return min(sdf(left(g), v), sdf(right(g), v))
 end
 
+"""
+$(TYPEDEF)
+$(TYPEDFIELDS)
+"""
 struct DynamicUnion{
   T, N, 
   A <: AbstractPrimitive{T, N}, 
@@ -43,14 +51,26 @@ function sdf(g::DynamicUnion, v)
 end
 
 # front end methods
+"""
+$(TYPEDSIGNATURES)
+"""
 Base.union(::Nothing, g::AbstractPrimitive) = g
+"""
+$(TYPEDSIGNATURES)
+"""
 Base.union(g::AbstractPrimitive, ::Nothing) = g
 
+"""
+$(TYPEDSIGNATURES)
+"""
 function Base.union(g1::AbstractPrimitive, g2::AbstractPrimitive)
   g = StaticUnion(g1, g2)
   return g
 end
 
+"""
+$(TYPEDSIGNATURES)
+"""
 function Base.union(g1::AbstractPrimitive, g2::AbstractArray{<:AbstractPrimitive, 1})
   g = DynamicUnion{eltype(g1), ndims(g1), typeof(g1), typeof(g2)}(g1, g2)
   return g

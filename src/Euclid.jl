@@ -4,10 +4,24 @@ module Euclid
 import GeometryBasics
 
 using AbstractTrees
+using DocStringExtensions
 using LinearAlgebra
 using MeshIO
 using Serde
 using StaticArrays
+
+# @template DEFAULT =
+#   """
+#   $(TYPEDFIELDS)
+#   $(DOCSTRING)
+#   """
+# @template DEFAULT =
+#   """
+#   $(TYPEDFIELDS)
+#   $(SIGNATURES)
+#   $(DOCSTRING)
+#   $(METHODLIST)
+#   """
 
 include("AbstractTypes.jl")
 include("BoundingBox.jl")

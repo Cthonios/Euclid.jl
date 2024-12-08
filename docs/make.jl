@@ -22,7 +22,18 @@ makedocs(;
     # ],
   ),
   pages=[
-    "Home" => "index.md"
+    "Home"                  => "index.md"
+    "Affine Transformation" => "affine.md"
+    "Boolean Operations"    => "boolean.md"
+    "Geometric Primitives"  => [
+      "0-Dimensional Primitives" => "primitives_0D.md"
+      "1-Dimensional Primitives" => "primitives_1D.md"
+      "2-Dimensional Primitives" => "primitives_2D.md"
+      "3-Dimensional Primitives" => "primitives_3D.md"
+    ]
+    "Internals"             => [
+      "Abstract types" => "abstract.md"
+    ]
   ],
 )
 
