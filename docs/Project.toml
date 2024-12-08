@@ -1,0 +1,3 @@
+[deps]
+Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
+Euclid = "dad380ae-770c-4f78-bf4f-27055e0f4f18"
