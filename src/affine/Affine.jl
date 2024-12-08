@@ -3,7 +3,7 @@ $(TYPEDFIELDS)
 """
 struct AffineMapContainer{
   T, N, 
-  M <: AffineTransformation{T}, MInv <: AbstractAffinePrimitive{T}, 
+  M <: AffineTransformation{T}, MInv <: AffineTransformation{T}, 
   P <: AbstractPrimitive{T, N}
 } <: AbstractAffinePrimitive{T, N, M, MInv, P}
   transform::M
