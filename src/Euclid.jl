@@ -74,6 +74,9 @@ include("meshing/VoxelMesh.jl")
 # io stuff
 include("io/Step.jl")
 
+# for GUIExt
+function main end
+
 # geometries
 export Point
 # topologies
