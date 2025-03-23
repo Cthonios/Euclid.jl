@@ -30,20 +30,60 @@ function updatesdf!(mesh::Mesh, g::AbstractPrimitive)
   return nothing
 end
 
+function updatesdf_maybe!(mesh::Mesh, gs)
+  samples = (mesh.n, mesh.n, mesh.n)
+  bbs = boundingbox.(gs)
+  # ranges = range.(minimum(bb), maximum(bb))
+  bb_min = minimum(map(x -> x.min, bbs))
+  bb_max = maximum(map(x -> x.max, bbs))
+  ranges = range.(bb_min, bb_max)
+  # ranges = range.(bb.min - 0.5 * bb.min, bb.max + 0.5 * bb.max)
+  xp = LinRange(first(ranges[1]), last(ranges[1]), samples[1])
+  yp = LinRange(first(ranges[2]), last(ranges[2]), samples[2])
+  zp = LinRange(first(ranges[3]), last(ranges[3]), samples[3])
+  for g in gs
+    if g === nothing
+      continue
+    end
+    Threads.@threads for x in eachindex(xp)
+      # @info "$x / $(length(xp))"
+      for y in eachindex(yp)
+        for z in eachindex(zp)
+          mesh.sdf_arr[x, y, z] = sdf(g, Point(xp[x], yp[y], zp[z]))
+        end
+      end
+    end
+  end
+  return nothing
+end
+
 function mesh(mesh::Mesh, g::AbstractPrimitive)
   updatesdf!(mesh, g)
   bb = boundingbox(g)
   samples = (mesh.n, mesh.n, mesh.n)
   # ranges = range.(minimum(bb), maximum(bb))
-  ranges = range.(bb.min .- 0.5, bb.max .+ 0.5)
+  # ranges = range.(bb.min .- 0.5, bb.max .+ 0.5)
+  ranges = range.(bb.min, bb.max)
+
+# function mesh(mesh::Mesh, gs)
+#   updatesdf!(mesh, gs)
+#   bbs = boundingbox.(gs)
+#   samples = (mesh.n, mesh.n, mesh.n)
+#   bb_min = minimum(map(x -> x.min, bbs))
+#   bb_max = maximum(map(x -> x.max, bbs))
+#   ranges = range.(bb_min .- 0.5, bb_max .+ 0.5)
+
   xp = LinRange(first(ranges[1]), last(ranges[1]), samples[1])
   yp = LinRange(first(ranges[2]), last(ranges[2]), samples[2])
   zp = LinRange(first(ranges[3]), last(ranges[3]), samples[3])
   vts, fcs = isosurface(mesh.sdf_arr, MarchingCubes(), xp, yp, zp)
   mc = GeometryBasics.Mesh(GeometryBasics.Point3f.(vts), GeometryBasics.TriangleFace.(fcs))
+  return mc
 end
 
 mesh(g::AbstractPrimitive) = mesh(Mesh(128), g)
+# mesh(gs::Vector{<:AbstractPrimitive}) = mesh(Mesh(128), gs)
+
 
 function getcoordinatesize(mesh::Mesh, g::AbstractPrimitive)
   updatesdf!(mesh, g)

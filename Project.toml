@@ -8,15 +8,20 @@ AbstractTrees = "1520ce14-60c1-5f80-bbc7-55ef81b5835c"
 DocStringExtensions = "ffbed154-4ef7-542d-bbb7-c09d3a79fcae"
 FileIO = "5789e2e9-d7fb-5bc7-8068-2c6fae9b9549"
 GeometryBasics = "5c1252a2-5f33-56bf-86c9-59e7332b4326"
+InteractiveUtils = "b77e0a4c-d291-57a0-90e8-8db25a27a240"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 MeshIO = "7269a6da-0436-5bbc-96c2-40638cbb6118"
 Serde = "db9b398d-9517-45f8-9a95-92af99003e0e"
 StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
 
 [weakdeps]
+GLMakie = "e9467ef8-e4e7-5192-8a1a-b1aee30e663a"
+Gtk4 = "9db2cae5-386f-4011-9d63-a5602296539b"
+Gtk4Makie = "478199e7-b407-4926-87ea-7196203a28d8"
 Makie = "ee78f7c6-11fb-53f2-987a-cfe4a2b5a57a"
 
 [extensions]
+GUIExt = ["GLMakie", "Gtk4", "Gtk4Makie"]
 MakieExt = ["Makie"]
 
 [compat]
@@ -25,6 +30,9 @@ Aqua = "0.8"
 DocStringExtensions = "0.9"
 FileIO = "1"
 GeometryBasics = "0.4"
+Gtk4 = "0.7"
+Gtk4Makie = "0.3"
+JET = "0.9"
 LinearAlgebra = "1"
 Makie = "0.21"
 MeshIO = "0.4"
@@ -35,7 +43,8 @@ julia = "1"
 
 [extras]
 Aqua = "4c88cf16-eb10-579e-8560-4a9242c79595"
+JET = "c3a54625-cd67-489e-a8e7-0a5a0ff4e31b"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
-test = ["Aqua", "Test"]
+test = ["Aqua", "JET", "Test"]
