@@ -1,30 +1,54 @@
 module Euclid
 
+# exports
+
+# geometries
+export Point
+# topologies
+export Vertex
+export Line
+export Circle,
+       Ellipse,
+       LineLoop,
+       Rectangle,
+       Triangle
+export Cube,
+       Cylinder,
+       Ellipsoid,
+       Sphere,
+       Torus
+# others
+export LinearExtrude
+
+# reexports
+export save
+
+# methods
+export boundingbox
+export difference
+export mesh
+export rotate
+export sdf
+export translate
+
+# dependencies
 # mainly for the STL mesh type
 import GeometryBasics
 
 using AbstractTrees
 using DocStringExtensions
+using FileIO
 using LinearAlgebra
 using MeshIO
 using Serde
 using StaticArrays
 
-# @template DEFAULT =
-#   """
-#   $(TYPEDFIELDS)
-#   $(DOCSTRING)
-#   """
-# @template DEFAULT =
-#   """
-#   $(TYPEDFIELDS)
-#   $(SIGNATURES)
-#   $(DOCSTRING)
-#   $(METHODLIST)
-#   """
-
+# source code
 include("AbstractTypes.jl")
 include("BoundingBox.jl")
+
+# testing stuff
+include("NewGeometry.jl")
 
 # affine
 include("affine/Affine.jl")
@@ -75,32 +99,7 @@ include("meshing/VoxelMesh.jl")
 include("io/Step.jl")
 
 # for GUIExt
+function designer_main end
 function main end
-
-# geometries
-export Point
-# topologies
-export Vertex
-export Line
-export Circle,
-       Ellipse,
-       LineLoop,
-       Rectangle,
-       Triangle
-export Cube,
-       Cylinder,
-       Ellipsoid,
-       Sphere,
-       Torus
-# others
-export LinearExtrude
-
-# methods
-export boundingbox
-export difference
-export mesh
-export rotate
-export sdf
-export translate
 
 end # module

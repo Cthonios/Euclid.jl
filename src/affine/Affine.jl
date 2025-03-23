@@ -38,7 +38,7 @@ end
 """
 $(TYPEDSIGNATURES)
 """
-function rotate(g::AbstractPrimitive, axis, angle)
+function rotate(g::AbstractPrimitive, axis::Symbol, angle)
   if axis == :x
     A = SMatrix{3, 3, eltype(g), 9}(
       1., 0., 0., 0., 
@@ -58,10 +58,24 @@ function rotate(g::AbstractPrimitive, axis, angle)
       0., 0., 1.
     )
   else
-    @assert false
+    @assert false "bad axis symbol in rotate"
   end
   transform = AffineTransformation(A, zeros(SVector{3, eltype(g)}))
   return AffineMapContainer(transform, invert(transform), g)
+end
+
+function rotate(g::AbstractPrimitive, axis::AbstractString, angle)
+  # axis = String(axis)
+  if cmp(axis, "x") == 0
+    sym = :x
+  elseif cmp(axis, "y") == 0
+    sym = :y
+  elseif cmp(axis, "z") == 0
+    sym = :z
+  else
+    @assert false "bad axis string in rotate. Axis = $axis"
+  end
+  return rotate(g, sym, angle)
 end
 
 """

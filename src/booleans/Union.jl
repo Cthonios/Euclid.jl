@@ -75,3 +75,36 @@ function Base.union(g1::AbstractPrimitive, g2::AbstractArray{<:AbstractPrimitive
   g = DynamicUnion{eltype(g1), ndims(g1), typeof(g1), typeof(g2)}(g1, g2)
   return g
 end
+
+# in development stuff
+function _boundingbox_union(t::CSGTree{T})::BoundingBox{T} where T
+  # return union(boundingbox(left(g)), boundingbox(right(g)))
+  bb = boundingbox(left(t))
+  if right(t) !== nothing
+    for g in right(t)
+      bb = union(bb, boundingbox(g))
+    end
+  end
+  return bb
+end
+
+function _sdf_union(t::CSGTree, v)
+  return min(
+    sdf(left(t), v), 
+    minimum(sdf.(right(t), (v,)))
+  )
+end
+
+Base.union(g::Geometry, ::Nothing) = g
+Base.union(::Nothing, g::Geometry) = g
+
+function Base.union(left::CSGTree{T}, right::CSGTree{T}) where T
+  @assert left.geometry.dimension == right.geometry.dimension
+  params = -Inf * ones(Parameters)
+  g = Geometry(left.geometry.dimension, UNION, params)
+  return CSGTree{T}(g, left, [right])
+end
+
+Base.union(left::Geometry{T}, right::Geometry{T}) where T = union(CSGTree(left), CSGTree(right))
+Base.union(left::CSGTree{T}, right::Geometry{T}) where T = union(left, CSGTree(right))
+Base.union(left::Geometry{T}, right::CSGTree{T}) where T = union(CSGTree(left), right)

@@ -1,5 +1,6 @@
 using Aqua
 using Euclid
+using JET
 using StaticArrays
 using Test
 
@@ -114,11 +115,19 @@ function test_translation()
   bb = boundingbox(t)
   @test bb.min == Point(0., -1., -1.)
   @test bb.max == Point(2., 1., 1.)
+  @test sdf(t, Point(1., 0., 0.)) < 0.
+  @test sdf(t, Point(0., 0., 0.)) ≈ 0.
+  @test sdf(t, Point(2., 0., 0.)) ≈ 0.
+  @test sdf(s, Point(4., 0., 0.)) > 0.
 
   t = translate(s, 0., 2., 0.)
   bb = boundingbox(t)
   @test bb.min == Point(-1., 1., -1.)
   @test bb.max == Point(1., 3., 1.)
+  @test sdf(t, Point(0., 2., 0.)) < 0.
+  @test sdf(t, Point(0., 1., 0.)) ≈ 0.
+  @test sdf(t, Point(0., 3., 0.)) ≈ 0.
+  @test sdf(t, Point(0., 5., 0.)) > 0.
 
   t = translate(s, 0., 0., 3.)
   bb = boundingbox(t)
@@ -133,4 +142,9 @@ function test_aqua()
   Aqua.test_all(Euclid)
 end
 
-test_aqua()
+function test_jet()
+  JET.test_package("Euclid"; target_defined_modules=true)
+end
+
+# test_aqua()
+test_jet()
